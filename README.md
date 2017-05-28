@@ -14,6 +14,7 @@ One can check addresses at https://www.sonic.com/availability
 ## TODO
 - [x] Use street centerlines instead of intersecion points
 - [ ] Add central office points
+- [ ] Write single script for pulling/updating data
 - [ ] Include permit number and date in map
 - [ ] Add timelapse of permits
 
@@ -31,7 +32,7 @@ All of the following commands can be run in OS X and (probably) most Linux insta
 while read line; do curl -OJ $line; done < permiturls.txt;
 ```
 
-Once all the permits are downloaded, they can be run through tabula-extractor (https://github.com/tabulapdf/tabula-extractor) to try and convert the info to CSVs:
+Once all the permits are downloaded, they can be run through [tabula-extractor](https://github.com/tabulapdf/tabula-extractor) to try and convert the info to CSVs:
 ```bash
 java -jar tabula-0.9.2-jar-with-dependencies.jar -b . -l -p all -r -u;
 ```
@@ -45,8 +46,8 @@ for file in *.csv; do python clean_tabula_csv.py $file; done >> sonic_intersecti
 ```
 
 The city of San Francisco provides street and intersection data at data.sfgov.org.
-I used their List of Streets and Intersections (https://data.sfgov.org/Geographic-Locations-and-Boundaries/List-of-Streets-and-Intersections/pu5n-qu5c) and Basemap Street Centerlines (https://data.sfgov.org/Geographic-Locations-and-Boundaries/San-Francisco-Basemap-Street-Centerlines/7hfy-8sz8) datasets.
-The List of Streets contains every intersection of every street in the City by name as printed in the permits while the Basemap contains street gemoetry by "CNN" which is referenced in the List of Streets.
+I used their [List of Streets and Intersections](https://data.sfgov.org/Geographic-Locations-and-Boundaries/List-of-Streets-and-Intersections/pu5n-qu5c) and [Basemap Street Centerlines](https://data.sfgov.org/Geographic-Locations-and-Boundaries/San-Francisco-Basemap-Street-Centerlines/7hfy-8sz8) datasets.
+The List of Streets contains every intersection of every street in the City by name as printed in the permits while the Basemap contains street geometry by "CNN" which is referenced in the List of Streets.
 Exporting both sets as CSVs, I imported them and our permit CSV into an sqlite database:
 ```bash
 echo "
@@ -68,6 +69,6 @@ JOIN sf_cnn ON sf.CNN = sf_cnn.cnn;
 " | sqlite3 sonic.sqlite > sonic_fiber.wkt
 ```
 
-The included `index.html` contains a basic Leaflet (https://leafletjs.com) map and Wicket (https://github.com/arthur-e/Wicket) plugin to parse and draw sonic_fiber.wkt.
+The included `index.html` contains a basic [Leaflet](https://leafletjs.com) map with the [Wicket](https://github.com/arthur-e/Wicket) plugin to parse and draw sonic_fiber.wkt.
 
 Permits are being issued and executed every week and the data within is recent as of May 22, 2017.
