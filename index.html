@@ -19,28 +19,51 @@ L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x
   maxZoom: 18,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
 }).addTo(map);
-var xhr = new XMLHttpRequest();
-xhr.open('GET', 'sonic_fiber.wkt', true);
-xhr.onload = function() {
-  var lines = this.response.split('\n');
-  for (var i=0, l=lines.length; i<l; i++) {
-    if (lines[i]) {
-      var wkt = new Wkt.Wkt(lines[i]);
-      wkt.toObject().addTo(map);
+
+ajax('sonic_fiber.csv', function(response) {
+  var permitsByCNN = {};
+  var wktByCNN = {};
+  var lines = response.split('\n');
+  for (var i=0, l=lines.length; i<l-1; i++) {
+    var cols = lines[i].split('|');
+    if (cols[0]) {
+      wktByCNN[cols[0]] = cols[5];
+      if (!permitsByCNN[cols[0]]) permitsByCNN[cols[0]] = [];
+      permitsByCNN[cols[0]].push(cols[1]);
+    } else {
+      // Show broken data. "Intersection" is for intersection-specific permits. Not very interesting to map. Might be related to running laterals to houses?
+      if (cols[4] != "Intersection") console.log("Missing CNN", cols);
     }
   }
-};
-xhr.send()
-/*
-//Fetch API
-window.fetch('sonic_fiber.wkt').then(function(response) {
-  response.text().then(function(text) {
-    var lines = text.split('\n');
-    for (var i=0, l=lines.length; i<l; i++) {
-      var wkt = new Wkt.Wkt(lines[i]);
-      wkt.toObject().addTo(map);
+  for (cnn in wktByCNN) {
+    var wkt = new Wkt.Wkt(wktByCNN[cnn]);
+    var line = wkt.toObject();
+    var popup = "<strong>Permits</strong>";
+    var permits = permitsByCNN[cnn];
+    for (var i=0, l=permits.length; i<l; i++) {
+      popup += "<br>"+permits[i];
+      popup += " <a href='http://bsm.sfdpw.org/permitstracker/reports/report.aspx?title=Permit&report=StreetUsePermit&params=permit="+permits[i]+"&ExportPDF=1' target='_blank'>Download</a>";
     }
-  });
+    line.bindPopup(popup);
+    line.addTo(map); 
+  }
 });
-*/
+ajax('sonic_cos.csv', function(response) {
+  var lines = response.split('\n');
+  for (var i=1, l=lines.length; i<l; i++) {
+    var cols = lines[i].split('\t');
+    var point = L.marker([cols[3], cols[2]]);
+    point.bindPopup("<strong>"+cols[0]+"</strong><br>"+cols[1]);
+    point.addTo(map);
+  }
+});
+
+function ajax(url, callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.onload = function() {
+    return callback(this.response);
+  };
+  xhr.send();
+}
 </script>

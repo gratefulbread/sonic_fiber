@@ -13,24 +13,18 @@ One can check addresses at https://www.sonic.com/availability
 
 ## TODO
 - [x] Use street centerlines instead of intersecion points
-- [ ] Add central office points
+- [x] Add central office points
 - [ ] Write single script for pulling/updating data
-- [ ] Include permit number and date in map
+- [x] Include permit number
+- [ ] and date on map
 - [ ] Add timelapse of permits
 
 ## How To
 Permit data can be found at http://bsm.sfdpw.org/reports/public/permitsearch.aspx
 
-A search for "Sonic Telecom" as the Agency and "Temporary Occupancy" as the Permit Type returns a list of permits mostly associated with pulling aerial fiber up and down streets.
+A search for "Sonic Telecom" as the Agency and "Temporary Occupancy" as the Permit Type returns a list of permits mostly (but not always) associated with pulling aerial fiber up and down streets.
 
-PDFs of the permits contain detailed street information and can be downloaded with the Print link next to each permit.
-
-`permiturls.txt` is a list of permit PDF urls as of May 22, 2017 and can be used to download all the PDFs within.
-
-All of the following commands can be run in OS X and (probably) most Linux installs:
-```bash
-while read line; do curl -OJ $line; done < permiturls.txt;
-```
+PDFs of the permits contain detailed street information and can be downloaded with the Print link next to each permit. Any number of plugins or tools can be used to download these en masse.
 
 Once all the permits are downloaded, they can be run through [tabula-extractor](https://github.com/tabulapdf/tabula-extractor) to try and convert the info to CSVs:
 ```bash
@@ -41,8 +35,8 @@ There's a lot of cruft in the CSVs, but the important rows (street, start and en
 
 The included Python script `clean_tabula_csv.py` can be run against all the CSVs and filters lines by this rule while adding the current street name to every first column:
 ```bash
-echo "streetname,from_st,to_st" > sonic_intersections.csv;
-for file in *.csv; do python clean_tabula_csv.py $file; done >> sonic_intersections.csv;
+echo "permit,streetname,from_st,to_st" > sonic_intersections.csv;
+ls 1*TOC*.csv | xargs -L1 python clean_tabula_csv.py >> sonic_intersections.csv;
 ```
 
 The city of San Francisco provides street and intersection data at data.sfgov.org.
@@ -50,6 +44,7 @@ I used their [List of Streets and Intersections](https://data.sfgov.org/Geograph
 The List of Streets contains every intersection of every street in the City by name as printed in the permits while the Basemap contains street geometry by "CNN" which is referenced in the List of Streets.
 Exporting both sets as CSVs, I imported them and our permit CSV into an sqlite database:
 ```bash
+rm sonic.sqlite;
 echo "
 .separator ','
 .import sonic_intersections.csv sonic_intersections
@@ -58,17 +53,22 @@ echo "
 " | sqlite3 sonic.sqlite
 ```
 
-After importing our CSVs, we can do a few joins to get the geometry of the streets covered by the permits. I could have used PostgreSQL or SpatiaLite to generate proper geospatial data, but it's easier to just use the WKT the City includes with their CNN data.
+After importing our CSVs, we can do a few joins to get the geometry of the streets covered by the permits. I could have used PostgreSQL or SpatiaLite to generate proper geospatial data, but it's easier to just use the [WKT](https://en.wikipedia.org/wiki/Well-known_text) the City includes with their CNN data.
 ```bash
 echo "
-SELECT sf_cnn.geometry FROM sonic_intersections sonic
-JOIN sf_intersections sf ON sonic.streetname = sf.streetname
+SELECT sf_cnn.cnn, sonic.permit, sonic.streetname, sonic.from_st, sonic.to_st, sf_cnn.geometry FROM sonic_intersections sonic
+LEFT JOIN sf_intersections sf ON sonic.streetname = sf.streetname
   AND sonic.from_st = sf.from_st
   AND sonic.to_st = sf.to_st
-JOIN sf_cnn ON sf.CNN = sf_cnn.cnn;
-" | sqlite3 sonic.sqlite > sonic_fiber.wkt
+LEFT JOIN sf_cnn ON sf.cnn = sf_cnn.cnn;
+" | sqlite3 sonic.sqlite > sonic_fiber.csv
 ```
 
-The included `index.html` contains a basic [Leaflet](https://leafletjs.com) map with the [Wicket](https://github.com/arthur-e/Wicket) plugin to parse and draw sonic_fiber.wkt.
+The included `index.html` contains a basic [Leaflet](https://leafletjs.com) map with the [Wicket](https://github.com/arthur-e/Wicket) plugin to parse and draw `sonic_fiber.csv`.
 
-Permits are being issued and executed every week and the data within is recent as of May 22, 2017.
+Permits are being issued and executed every week and the data within is recent as of **May 30, 2017**. (Except permit 17TOC-3140. Leaving that as an exercise for the user to figure out why :wink:)
+
+## Central Office Locations
+I found a [post from Dane Jasper](https://forums.sonic.net/viewtopic.php?f=10&t=2537&hilit=bonding&sid=439789da503651643b058d62747776b2&start=20#p16177) listing Sonic's central offices, so I've added them as markers on the map. A CSV with coordinates is in `sonic_cos.csv`
+
+
