@@ -3,6 +3,7 @@ A map highlighting Sonic.net fiber deployments generated from publicly-available
 
 ## Demo
 The map itself can be found at https://thatdan.github.io/sonic_fiber/
+The data within is recent as of **June 8, 2017**. (Except permit 17TOC-3140. I've left that as an exercise for the user to figure out why :wink:)
 
 ## Disclaimer
 This map is purely speculative based on street permits. I have not verified whether Sonic's fiber service is available on every street highlighted.
@@ -66,9 +67,5 @@ LEFT JOIN sf_cnn ON sf.cnn = sf_cnn.cnn;
 
 The included `index.html` contains a basic [Leaflet](https://leafletjs.com) map with the [Wicket](https://github.com/arthur-e/Wicket) plugin to parse and draw `sonic_fiber.csv`.
 
-Permits are being issued and executed every week and the data within is recent as of **May 30, 2017**. (Except permit 17TOC-3140. Leaving that as an exercise for the user to figure out why :wink:)
-
 ## Central Office Locations
-I found a [post from Dane Jasper](https://forums.sonic.net/viewtopic.php?f=10&t=2537&hilit=bonding&sid=439789da503651643b058d62747776b2&start=20#p16177) listing Sonic's central offices, so I've added them as markers on the map. A CSV with coordinates is in `sonic_cos.csv`
-
-
+Per a [request from phillijw](https://github.com/ThatDan/sonic_fiber/issues/1) I added markers highlighting Sonic's central offices as found in [this post from Dane Jasper](https://forums.sonic.net/viewtopic.php?f=10&t=2537&hilit=bonding&sid=439789da503651643b058d62747776b2&start=20#p16177). A CSV with coordinates is in `sonic_cos.csv`.
