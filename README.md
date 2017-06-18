@@ -28,7 +28,7 @@ A search for "Sonic Telecom" as the Agency and "Temporary Occupancy" as the Perm
 
 PDFs of the permits contain detailed street information and can be downloaded with the Print link next to each permit. Any number of plugins or tools can be used to download these en masse.
 
-Once all the permits are downloaded, they can be run through [tabula-extractor](https://github.com/tabulapdf/tabula-extractor) to try and convert the info to CSVs:
+Once all the permits are downloaded, they can be run through [tabula-java](https://github.com/tabulapdf/tabula-java) to convert the info into CSVs:
 ```bash
 java -jar tabula-0.9.2-jar-with-dependencies.jar -b . -l -p all -r -u;
 ```
