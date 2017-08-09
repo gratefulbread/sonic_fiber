@@ -4,7 +4,7 @@ A map highlighting Sonic.net fiber deployments generated from publicly-available
 ## Demo
 The map itself can be found at https://thatdan.github.io/sonic_fiber/
 
-The data within is recent as of **June 18, 2017**. (Except permit 17TOC-3140. I've left that as an exercise for the user to figure out why :wink:)
+The data within is recent as of **August 8, 2017**. (Except permit 17TOC-3140. I've left that as an exercise for the user to figure out why :wink:)
 
 ## Disclaimer
 This map is purely speculative based on street permits. I have not verified whether Sonic's fiber service is available on every street highlighted.
@@ -12,6 +12,9 @@ To quote [samstave on HackerNews](https://news.ycombinator.com/item?id=14427548)
 > Having the permit doesnt mean the fiber is pulled.
 
 One can check addresses at https://www.sonic.com/availability
+
+## Changelog
+- **2017-08-08** Waited for some permits to collect before updating. Biggest ones are for 19th St, Douglas St, Clipper St, 26th St, and Cesar Chavez St. Some permits are for underground conduit checks (e.g. 17TOC-4689 in Excelsior) which might hint to future plans.
 
 ## TODO
 - [x] Use street centerlines instead of intersecion points
