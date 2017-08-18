@@ -14,7 +14,13 @@ To quote [samstave on HackerNews](https://news.ycombinator.com/item?id=14427548)
 One can check addresses at https://www.sonic.com/availability
 
 ## Changelog
-- **2017-08-08** Waited for some permits to collect before updating. Biggest ones are for 19th St, Douglas St, Clipper St, 26th St, and Cesar Chavez St. Some permits are for underground conduit checks (e.g. 17TOC-4689 in Excelsior) which might hint to future plans.
+
+### 2017-08-17
+- Including Leaflet to prevent CDN issues.
+- Manually fixing "COLLINGWO OD" issue for now.
+
+### 2017-08-08
+- Waited for some permits to collect before updating. Biggest ones are for 19th St, Douglas St, Clipper St, 26th St, and Cesar Chavez St. Some permits are for underground conduit checks (e.g. 17TOC-4689 in Excelsior) which might hint to future plans.
 
 ## TODO
 - [x] Use street centerlines instead of intersecion points
@@ -61,11 +67,14 @@ echo "
 After importing our CSVs, we can do a few joins to get the geometry of the streets covered by the permits. I could have used PostgreSQL or SpatiaLite to generate proper geospatial data, but it's easier to just use the [WKT](https://en.wikipedia.org/wiki/Well-known_text) the City includes with their CNN data.
 ```bash
 echo "
-SELECT sf_cnn.cnn, sonic.permit, sonic.streetname, sonic.from_st, sonic.to_st, sf_cnn.geometry FROM sonic_intersections sonic
-LEFT JOIN sf_intersections sf ON sonic.streetname = sf.streetname
+SELECT sf_cnn.cnn, sonic.permit, sonic.streetname, sonic.from_st, sonic.to_st, sf_cnn.geometry
+FROM sonic_intersections sonic
+LEFT JOIN sf_intersections sf
+  ON sonic.streetname = sf.streetname
   AND sonic.from_st = sf.from_st
   AND sonic.to_st = sf.to_st
-LEFT JOIN sf_cnn ON sf.cnn = sf_cnn.cnn;
+LEFT JOIN sf_cnn
+  ON sf.cnn = sf_cnn.cnn;
 " | sqlite3 sonic.sqlite > sonic_fiber.csv
 ```
 
