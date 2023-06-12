@@ -2,7 +2,7 @@
 A map highlighting Sonic.net fiber deployments generated from publicly-available street permits.
 
 ## Demo
-The map itself can be found at https://thatdan.github.io/sonic_fiber/
+The map itself can be found at https://gratefulbread.github.io/sonic_fiber/
 
 The data within is recent as of **August 8, 2017**. (Except permit 17TOC-3140. I've left that as an exercise for the user to figure out why :wink:)
 
