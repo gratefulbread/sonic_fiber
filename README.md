@@ -1,10 +1,9 @@
 # Sonic Fiber Map
-A map highlighting Sonic.net fiber deployments generated from publicly-available street permits.
+A map highlighting Sonic.net fiber deployments generated from publicly-available street permits. Basis is from ThatDan/sonic_fiber
+Data is currently excavation permits, rather than the temporary occupancy permits that were on Dan's map.
 
 ## Demo
 The map itself can be found at https://gratefulbread.github.io/sonic_fiber/
-
-The data within is recent as of **August 8, 2017**. (Except permit 17TOC-3140. I've left that as an exercise for the user to figure out why :wink:)
 
 ## Disclaimer
 This map is purely speculative based on street permits. I have not verified whether Sonic's fiber service is available on every street highlighted.
@@ -23,12 +22,11 @@ One can check addresses at https://www.sonic.com/availability
 - Waited for some permits to collect before updating. Biggest ones are for 19th St, Douglas St, Clipper St, 26th St, and Cesar Chavez St. Some permits are for underground conduit checks (e.g. 17TOC-4689 in Excelsior) which might hint to future plans.
 
 ## TODO
-- [x] Use street centerlines instead of intersecion points
-- [x] Add central office points
 - [ ] Write single script for pulling/updating data
-- [x] Include permit number
 - [ ] and date on map
 - [ ] Add timelapse of permits
+- [ ] Add different color scheme for different permit types.
+- [ ] Investigate if other permits are being processed by other named applicants. i.e. 3rd party contractors.
 
 ## How To
 Permit data can be found at http://bsm.sfdpw.org/reports/public/permitsearch.aspx
