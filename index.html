@@ -45,8 +45,9 @@ ajax('sonic_fiber.csv', function(response) {
       popup += " <a href='http://bsm.sfdpw.org/permitstracker/reports/report.aspx?title=Permit&report=StreetUsePermit&params=permit="+permits[i]+"&ExportPDF=1' target='_blank'>Download</a>";
     }
     line.bindPopup(popup);
-    line, {color: 'red', fillcolor: '#f03'}.addTo(map); 
-  }
+    line.addTo(map);
+  } ,
+var polyline = L.polyline([[38.78795027250336, -122.43364712402101],[37.78774116474385, -122.4352931318896], {color: 'red'}).addTo(map);
 });
 ajax('sonic_cos.csv', function(response) {
   var lines = response.split('\n');
