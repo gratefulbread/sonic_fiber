@@ -46,18 +46,18 @@ ajax('sonic_fiber.csv', function(response) {
     }
     line.bindPopup(popup);
     line.addTo(map);
-  } ,
+  }
       
       
     var latlngs = [
     [38.51, -122.68],
     [38.77, -122.43],
-    [38.04, -118.2]
-];  
+    ];  
 
 var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
 });
-ajax('sonic_cos.csv', function(response) {
+
+  ajax('sonic_cos.csv', function(response) {
   var lines = response.split('\n');
   for (var i=1, l=lines.length; i<l; i++) {
     var cols = lines[i].split('\t');
